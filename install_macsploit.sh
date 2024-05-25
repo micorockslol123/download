@@ -1,9 +1,6 @@
-main() {
-    # Create a directory to install everything
-    INSTALL_DIR="$HOME/MacSploit"
-    mkdir -p "$INSTALL_DIR"
-    cd "$INSTALL_DIR" || exit
+#!/bin/bash
 
+main() {
     clear
     echo -e "Welcome to the MacSploit Experience!"
     echo -e "Install Script Version 2.3"
@@ -17,7 +14,9 @@ main() {
     rm ./jq
 
     echo -n "Installing Latest Roblox... "
+    [ -d "/Applications/Roblox.app" ] && rm -rf "/Applications/Roblox.app"
     unzip -o -q "./RobloxPlayer.zip"
+    mv ./RobloxPlayer.app /Applications/Roblox.app
     rm ./RobloxPlayer.zip
     echo -e "Done."
 
@@ -26,11 +25,11 @@ main() {
 
     echo -n "Installing MacSploit... "
     unzip -o -q "./MacSploit.zip"
-    rm ./MacSploit.zip
     echo -e "Done."
 
     echo -n "Updating Dylib..."
-    if [ "$version" == "version-88b4e5cd14654499" ]; then
+    if [ "$version" == "version-88b4e5cd14654499" ]
+    then
         curl -Os "https://git.abyssdigital.xyz/preview/macsploit.dylib"
     else
         curl -Os "https://git.abyssdigital.xyz/main/macsploit.dylib"
@@ -38,15 +37,17 @@ main() {
     
     echo -e " Done."
     echo -e "Patching Roblox..."
-    mv ./macsploit.dylib "./RobloxPlayer.app/Contents/MacOS/macsploit.dylib"
-    mv ./libdiscord-rpc.dylib "./RobloxPlayer.app/Contents/MacOS/libdiscord-rpc.dylib"
-    ./insert_dylib "./RobloxPlayer.app/Contents/MacOS/macsploit.dylib" "./RobloxPlayer.app/Contents/MacOS/RobloxPlayer" --strip-codesig --all-yes
-    mv "./RobloxPlayer.app/Contents/MacOS/RobloxPlayer_patched" "./RobloxPlayer.app/Contents/MacOS/RobloxPlayer"
-    rm -r "./RobloxPlayer.app/Contents/MacOS/RobloxPlayerInstaller.app"
+    mv ./macsploit.dylib "/Applications/Roblox.app/Contents/MacOS/macsploit.dylib"
+    mv ./libdiscord-rpc.dylib "/Applications/Roblox.app/Contents/MacOS/libdiscord-rpc.dylib"
+    ./insert_dylib "/Applications/Roblox.app/Contents/MacOS/macsploit.dylib" "/Applications/Roblox.app/Contents/MacOS/RobloxPlayer" --strip-codesig --all-yes
+    mv "/Applications/Roblox.app/Contents/MacOS/RobloxPlayer_patched" "/Applications/Roblox.app/Contents/MacOS/RobloxPlayer"
+    rm -r "/Applications/Roblox.app/Contents/MacOS/RobloxPlayerInstaller.app"
     rm ./insert_dylib
 
     echo -n "Installing MacSploit App... "
-    mv ./MacSploit.app "./RobloxPlayer.app/Contents/MacOS/MacSploit.app"
+    [ -d "/Applications/MacSploit.app" ] && rm -rf "/Applications/MacSploit.app"
+    mv ./MacSploit.app /Applications/MacSploit.app
+    rm ./MacSploit.zip
     echo -e "Done."
 
     echo -e "Install Complete! Developed by Nexus42!"
